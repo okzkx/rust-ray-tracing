@@ -2,6 +2,7 @@
 // https://misterdanb.github.io/raytracinginrust/#overview
 
 mod vec;
+mod ray;
 
 use crate::vec::*;
 use std::io::{stderr, Write};
