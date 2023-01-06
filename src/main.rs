@@ -9,8 +9,10 @@ use vec::{Vec3, Point3, Color};
 use ray::Ray;
 
 fn ray_color(r: &Ray) -> Color {
-    if hit_sphere(Point3::new(0.0, 0.0, -1.0), 0.5, r) {
-        return Color::new(1.0, 0.0, 0.0);
+    let t = hit_sphere(Point3::new(0.0, 0.0, -1.0), 0.5, r);
+    if t > 0.0 {
+        let n = (r.at(t) - Vec3::new(0.0, 0.0, -1.0)).normalized();
+        return 0.5 * Color::new(n.x() + 1.0, n.y() + 1.0, n.z() + 1.0);
     }
 
     let unit_direction = r.direction().normalized();
@@ -18,7 +20,7 @@ fn ray_color(r: &Ray) -> Color {
     (1.0 - t) * Color::new(1.0, 1.0, 1.0) + t * Color::new(0.5, 0.7, 1.0)
 }
 
-fn hit_sphere(center: Point3, radius: f64, r: &Ray) -> bool {
+fn hit_sphere(center: Point3, radius: f64, r: &Ray) -> f64  {
     // https://misterdanb.github.io/raytracinginrust/#addingasphere/ray-sphereintersection
 
     let oc = r.origin() - center;
@@ -26,7 +28,12 @@ fn hit_sphere(center: Point3, radius: f64, r: &Ray) -> bool {
     let b = 2.0 * oc.dot(r.direction());
     let c = oc.dot(oc) - radius * radius;
     let discriminant = b * b - 4.0 * a * c;
-    discriminant > 0.0
+
+    if discriminant < 0.0 {
+        -1.0
+    } else {
+        (-b - discriminant.sqrt()) / (2.0 * a)
+    }
 }
 
 fn main() {
