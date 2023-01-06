@@ -1,6 +1,9 @@
 // Ray Tracing in One Weekend
 // https://misterdanb.github.io/raytracinginrust/#overview
 
+mod vec;
+
+use crate::vec::*;
 use std::io::{stderr, Write};
 
 fn main() {
@@ -16,17 +19,14 @@ fn main() {
         stderr().flush().unwrap();
 
         for i in 0..IMAGE_WIDTH {
-            let r = (i as f64) / ((IMAGE_WIDTH - 1) as f64);
-            let g = (j as f64) / ((IMAGE_HEIGHT - 1) as f64);
-            let b = 0.25;
+            let pixel_color = Color::new(
+                (i as f64) / ((IMAGE_WIDTH - 1) as f64),
+                (j as f64) / ((IMAGE_HEIGHT - 1) as f64),
+                0.25,
+            );
 
-            let ir = (255.999 * r) as u64;
-            let ig = (255.999 * g) as u64;
-            let ib = (255.999 * b) as u64;
-
-            println!("{} {} {}", ir, ig, ib);
+            println!("{}", pixel_color.format_color());
         }
     }
     eprintln!("Done.");
 }
-
