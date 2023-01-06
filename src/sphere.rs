@@ -18,6 +18,8 @@ impl Sphere {
 
 impl Hit for Sphere {
     fn hit(&self, r: &Ray, t_min: f64, t_max: f64) -> Option<HitRecord> {
+        // https://misterdanb.github.io/raytracinginrust/#addingasphere/ray-sphereintersection
+
         let oc = r.origin() - self.center;
         let a = r.direction().length().powi(2);
         let half_b = oc.dot(r.direction());
