@@ -1,4 +1,5 @@
 use std::rc::Rc;
+use std::sync::Arc;
 use crate::material::Scatter;
 use super::vec::{Point3, Vec3};
 use super::ray::Ray;
@@ -7,11 +8,11 @@ use super::hit::{Hit, HitRecord};
 pub struct Sphere {
     center: Point3,
     radius: f64,
-    mat: Rc<dyn Scatter>
+    mat: Arc<dyn Scatter>
 }
 
 impl Sphere {
-    pub fn new(cen: Point3, r: f64, m: Rc<dyn Scatter>) -> Sphere {
+    pub fn new(cen: Point3, r: f64, m: Arc<dyn Scatter>) -> Sphere {
         Sphere {
             center: cen,
             radius: r,
@@ -20,7 +21,7 @@ impl Sphere {
     }
 }
 
-impl Hit for Sphere {
+impl Hit for Sphere  {
     fn hit(&self, r: &Ray, t_min: f64, t_max: f64) -> Option<HitRecord> {
         // https://misterdanb.github.io/raytracinginrust/#addingasphere/ray-sphereintersection
 

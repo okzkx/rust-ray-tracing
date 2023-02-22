@@ -3,12 +3,12 @@ use crate::hit::HitRecord;
 use crate::ray::Ray;
 use crate::vec::{Color, Vec3};
 
-pub trait Scatter {
+pub trait Scatter: Send + Sync {
     fn scatter(&self, r_in: &Ray, rec: &HitRecord) -> Option<(Color, Ray)>;
 }
 
 pub struct Lambertian {
-    albedo: Color
+    albedo: Color,
 }
 
 impl Lambertian {
@@ -27,16 +27,17 @@ impl Scatter for Lambertian {
         Some((self.albedo, scattered))
     }
 }
+
 pub struct Metal {
     albedo: Color,
-    fuzz: f64
+    fuzz: f64,
 }
 
 impl Metal {
     pub fn new(a: Color, f: f64) -> Metal {
         Metal {
             albedo: a,
-            fuzz: f
+            fuzz: f,
         }
     }
 }
@@ -55,7 +56,7 @@ impl Scatter for Metal {
 }
 
 pub struct Dielectric {
-    ir: f64
+    ir: f64,
 }
 
 impl Dielectric {
@@ -71,6 +72,7 @@ impl Dielectric {
         r0 + (1.0 - r0) * (1.0 - cosine).powi(5)
     }
 }
+
 impl Scatter for Dielectric {
     fn scatter(&self, r_in: &Ray, rec: &HitRecord) -> Option<(Color, Ray)> {
         let refraction_ratio = if rec.front_face {
